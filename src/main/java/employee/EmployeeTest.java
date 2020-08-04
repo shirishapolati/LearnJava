@@ -2,13 +2,15 @@ package employee;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeeTest {
     private static Connection getdbconnection(){
         Connection connection=null;
        try{
-           connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/learnjava","root","chinnusiri");
+           connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/learnjava?useTimezone=true&serverTimezone=UTC","root","chinnusiri");
 
        }catch (SQLException e){
            e.printStackTrace();
@@ -45,11 +47,22 @@ public class EmployeeTest {
         return list;
     }
 
+    private static List<Employee> sortList(List<Employee> finallist){
+        List<Employee> sortedlist=null;
+        sortedlist=finallist.stream().sorted(Comparator.comparing(Employee::getSalary)).collect(Collectors.toList());
+
+        return sortedlist;
+
+    }
+
     public static void main(String[] args) {
 
         Connection con=getdbconnection();
         List<Employee> finalList=readData();
         System.out.println(finalList);
+
+        List<Employee> finalsortedlist=sortList(finalList);
+        System.out.println(finalsortedlist);
 
     }
 }
