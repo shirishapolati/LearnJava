@@ -1,20 +1,43 @@
 package employee;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class EmployeeTest {
     private static Connection getdbconnection(){
         Connection connection=null;
        try{
-           connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/learnjava?useTimezone=true&serverTimezone=UTC","root","chinnusiri");
+           FileInputStream fileInputStream=new FileInputStream("resources/database.properties");
+           Properties properties=new Properties();
+           properties.load(fileInputStream);
+
+           String s1=properties.getProperty("sqlurl");
+           String s2=properties.getProperty("sqlusername");
+           String s3=properties.getProperty("sqlpassword");
+
+           connection= DriverManager.getConnection(s1,s2,s3);
 
        }catch (SQLException e){
            e.printStackTrace();
+       }//finally {
+       catch (FileNotFoundException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
        }
+//           try {
+//               connection.close();
+//           } catch (SQLException throwables) {
+//               throwables.printStackTrace();
+//           }
+//       }
 
         return connection;
     }
